@@ -5,6 +5,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 	"log"
+	"os"
 	"time"
 )
 
@@ -21,7 +22,7 @@ type MysqlConf struct {
 	Database    string
 	MaxLiftTime time.Duration
 	LogMode     bool
-	log         gorm.Logger
+	Log         *log.Logger
 }
 
 func (c MysqlConf) String() string {
@@ -48,7 +49,11 @@ func InitConn(c MysqlConf) (*gorm.DB, error) {
 		return conn, err
 	}
 	conn.LogMode(c.LogMode)
-	conn.SetLogger(c.log)
+	if c.Log != nil {
+		conn.SetLogger(c.Log)
+	} else {
+		conn.SetLogger(gorm.Logger{log.New(os.Stdout, "\r\n", 0)})
+	}
 	conn.DB().SetConnMaxLifetime(c.MaxLiftTime)
 	return conn, nil
 }
@@ -72,7 +77,7 @@ func Conn(name string) *gorm.DB {
 	if conn, ok := connections[name]; ok {
 		return conn
 	}
-	if c, ok := connections[name]; ok {
+	if c, ok := ConnConfigs[name]; ok {
 		connections[name], err = InitConn(c)
 		if err != nil {
 			panic(fmt.Sprintf("Connect mysql (%s: %s) failed: %+v", name, c.String(), err))

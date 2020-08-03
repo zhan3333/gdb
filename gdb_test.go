@@ -6,6 +6,21 @@ import (
 	"testing"
 )
 
+func TestMain(m *testing.M) {
+	gdb.ConnConfigs = map[string]gdb.MysqlConf{
+		"default": {
+			Host:        "127.0.0.1",
+			Port:        "3306",
+			Username:    "root",
+			Password:    "123456",
+			Database:    "test",
+			MaxLiftTime: 30,
+			LogMode:     true,
+		},
+	}
+	m.Run()
+}
+
 func TestConn(t *testing.T) {
 	var err error
 	_, err = gdb.InitDef()
