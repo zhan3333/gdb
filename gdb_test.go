@@ -19,6 +19,7 @@ func TestMain(m *testing.M) {
 		},
 	}
 	m.Run()
+	gdb.Close()
 }
 
 func TestConn(t *testing.T) {

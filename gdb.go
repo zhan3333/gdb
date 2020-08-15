@@ -20,14 +20,43 @@ type MysqlConf struct {
 	Username    string
 	Password    string
 	Database    string
+	Loc         string
+	ParseTime   *string
+	Timeout     *uint
+	Charset     string
 	MaxLiftTime time.Duration
 	LogMode     bool
 	Log         *log.Logger
 }
 
 func (c MysqlConf) String() string {
-	return fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=utf8&parseTime=True&loc=Local&timeout=15s",
-		c.Username, c.Password, c.Host, c.Port, c.Database)
+	charset := "utf8"
+	parseTime := "True"
+	loc := "Local"
+	timeout := uint(15)
+	if c.Charset != "" {
+		charset = c.Charset
+	}
+	if c.ParseTime != nil {
+		parseTime = *c.ParseTime
+	}
+	if c.Loc != "" {
+		loc = c.Loc
+	}
+	if c.Timeout != nil {
+		timeout = *c.Timeout
+	}
+	return fmt.Sprintf("%s:%s@(%s:%s)/%s?charset=%s&parseTime=%s&loc=%s&timeout=%ds",
+		c.Username,
+		c.Password,
+		c.Host,
+		c.Port,
+		c.Database,
+		charset,
+		parseTime,
+		loc,
+		timeout,
+	)
 }
 
 var connections = map[string]*gorm.DB{}
