@@ -2,7 +2,7 @@ package gdb_test
 
 import (
 	"github.com/stretchr/testify/assert"
-	"github.com/zhan3333/gdb"
+	"github.com/zhan3333/gdb/v2"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"log"
