@@ -32,7 +32,7 @@ gorm v2 版本多连接, 使用需要预先配置 DefaultName ConnConfigs 两项
 package main
 import (
     "fmt"
-    "github.com/zhan3333/gdb"
+    "github.com/zhan3333/gdb/v2"
     "gorm.io/gorm"
     "gorm.io/gorm/logger"
     "log"
